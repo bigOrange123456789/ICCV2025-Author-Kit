@@ -1,0 +1,15 @@
+\section{Conclusion}
+
+In this paper, we propose a new self-supervised vessel segmentation method based on the XCA perspective imaging principle. 
+This method achieves high accuracy while avoiding the costly XCA vessel annotation work. 
+Unlike existing self-supervised coronary vessel segmentation methods, our fractal vessel objects are three-dimensional and have curved arcs, 
+which can better simulate the real coronary vessel structure. 
+One challenge faced by coronary vessel segmentation technology is that the effect of angiograms in practical applications will be affected by the concentration of contrast agent in the blood, resulting in large data offset. 
+Then, 
+we have successfully solved this adjustment by using the consistency regularization constraint of the contrast agent concentration perturbation. 
+Another challenge faced by self-supervised coronary vessel segmentation methods is that since XCA uses perspective imaging technology, 
+it is difficult to decouple the vessel objects and background in the image. To this end, 
+we design a double ellipse constraint based on Fourier transform to better achieve the decoupling between the vessel objects and the background. 
+To the best of our knowledge, 
+this paper is the first method to apply the three-dimensional perspective principle to self-supervised vessel segmentation learning, 
+and has achieved SOTA results in XCA vessel segmentation methods that do not require manual annotation.

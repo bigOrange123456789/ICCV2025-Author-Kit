@@ -1,0 +1,9 @@
+文字加粗：
+    {\bf There will be no extra page charges for \confName\ \confYear.}
+ICCV 2025：
+    \confName\ \confYear
+花体（？）：
+    \LaTeX\
+图片：
+    引用两张：
+        \cref{fig:onecol,fig:short}

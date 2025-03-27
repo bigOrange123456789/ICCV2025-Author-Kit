@@ -20,6 +20,10 @@
 \definecolor{iccvblue}{rgb}{0.21,0.49,0.74}
 \usepackage[pagebackref,breaklinks,colorlinks,allcolors=iccvblue]{hyperref}
 
+% 引入一些包用于图片显示
+\usepackage{graphicx}
+\usepackage{subcaption} % 加载子图宏包
+
 %%%%%%%%% PAPER ID  - PLEASE UPDATE
 \def\paperID{*****} % *** Enter the Paper ID here
 \def\confName{ICCV}
@@ -49,8 +53,11 @@ First line of institution2 address\\
 \maketitle
 \input{sec/0_abstract}    
 \input{sec/1_intro}
-\input{sec/2_formatting}
-\input{sec/3_finalcopy}
+\input{sec/2_Related}
+\input{sec/3_Methodology}
+\input{sec/4_Implementation}
+\input{sec/5_Experimental}
+\input{sec/6_Conclusion}
 {
     \small
     \bibliographystyle{ieeenat_fullname}
