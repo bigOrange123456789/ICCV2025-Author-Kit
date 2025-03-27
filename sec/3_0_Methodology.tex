@@ -1,0 +1,27 @@
+\section{Methodology}
+\label{sec:intro}
+
+In this section, we introduce the details of the proposed framework: Section 3.1 introduces the overall framework. Section 3.2 introduces how to generate the background map based on the contrast map. Section 3.3 introduces the method of adding synthetic blood vessels to the background map and the method of achieving contrast agent concentration perturbation. 
+The key symbols in the framework are summarized in \cref{tab:myT01}.
+
+%-------------------------------------------------------------------------
+
+\begin{table}
+   \centering
+   \begin{tabular}{@{}lp{0.8\linewidth}@{}}
+      \toprule
+      \textbf{Symbol} & \textbf{Definition} \\ \midrule
+      $x_t$ & Target image (real image) \\
+      $x_s$ & Source domain image(synthetic image) \\
+      $x_d$ & Perturbed image \\
+      $x_b$ & Synthetic background image \\
+      $f_t$ & Semantic features of single pixels in real images \\
+      $f_s$ & Synthesize the semantic features of a single pixel in an image \\
+      $f_d$ & Semantic features of single pixel of perturbed image \\
+      $y_r$ & Predicted masks for real images \\
+      $y_s$ & Predicted masks for synthetic images \\
+      $\text{mask}_s$ & Actual mask for synthetic image \\ \bottomrule
+      \end{tabular}
+   \caption{Symbols definitions of Overview}
+   \label{tab:myT01}
+ \end{table}

@@ -1,0 +1,72 @@
+\subsection{Synthesis of vascular}
+
+In the process of angiography, X-Ray first passes through human tissue, then through blood vessels, and finally through the remaining human tissue. Now let's consider this question first. If we take the blood vessels out of the human tissue and let the light pass through the non-tissue in the human body first and then through the blood vessels, will the light intensity obtained in this way be the same as before? In Appendix B, we have proved based on the volume rendering theory that the light intensity obtained in this way is the same as before. 
+Based on this analysis, this paper designs the vascular image synthesis algorithm shown in \cref{fig:render}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/9.render.png}
+  \caption{Comparison between the contrast image and the synthetic background image}
+  \label{fig:render}
+\end{figure}
+
+%-------------------------------------------------------------------------
+
+\subsubsection{Brightness attenuation}
+According to the Beer-Lambert theorem \cite{Beer-Lambert}, after light passes through an object, the attenuation $dL$ of the light radiation brightness depends on the light absorption rate $\sigma_t$ of the object material, the light brightness $L$, and the distance $dt$ the light travels in the object:
+\begin{equation}
+dL = -\sigma_t * L * dt
+\end{equation}
+Solving the above differential equation yields:
+\begin{equation}
+L = L_0 * e^{-\int_0^t \sigma_t dt}
+\end{equation}
+This equation shows that for a ray of initial radiance $L_0$, the ratio of radiance attenuation after passing through an object depends on the light absorption rate $\sigma_t$ of the object material. The main reason for the attenuation of radiance during the penetration process is that part of the light energy is converted into heat energy of the object. The contrast agent concentration in the synthetic blood vessel determines the light absorption rate of the synthetic blood vessel object, so we use the light absorption rate of the blood vessel object to describe the contrast agent concentration in the synthetic blood vessel. After passing through a blood vessel with a contrast agent concentration of $\sigma_v$, the calculation method for the X-Ray radiation brightness attenuation rate $L_v(\sigma_v)$ is:
+\begin{equation}
+L_v(\sigma_v) = e^{-\int_0^t d*\sigma_v}
+\end{equation}
+The synthesizer in \cref{fig:render} calculates the radiation brightness attenuation rate of the X-Ray in the direction corresponding to each pixel after passing through the blood vessel based on the above formula. The image corresponding to the X-Ray attenuation rate $L_v(\sigma_v)$ is essentially a description file of a 3D blood vessel object. When the contrast agent concentration $\sigma_v$ is known, the geometric shape of the 3D blood vessel can be restored through this image.
+
+%-------------------------------------------------------------------------
+
+\subsubsection{Volume Render for Blood Vessels}
+According to Appendix B, we can assume that the light first passes through the non-vascular tissue in the human body and then passes through the blood vessels. In this process, the radiation brightness of the X-Ray changes from the initial brightness $L_0$ to the final attenuated brightness $x_s(n)$:
+\begin{equation}
+x_s(n) = L_0 * e^{-\left[\int_{\text{bg}} \sigma_t dt + \int_{\text{v}} \sigma_v\right]}
+\end{equation}
+In this process, the X-Ray with an initial brightness of $L_0$ becomes brighter than $x_b(n)$ after passing through the non-vascular tissue of the human body:
+\begin{equation}
+x_b(n) = L_0 * e^{-\int_{\text{bg}} \sigma_t dt}
+\end{equation}
+The brightness $x_b(n)$ of the X-Ray after passing through the non-vascular tissue of the human body is actually the pixel value corresponding to the pixel point with coordinates on the synthetic background image $x_b$. Then, the ray passes through the vascular tissue again, and the radiation brightness of the X-Ray decays to the final $x_s(n)$:
+\begin{equation}
+x_s(n) = x_b(n) * L_v(\sigma_v)
+\end{equation}
+The final attenuation brightness $x_s(n)$ of the X-Ray is actually the pixel value corresponding to the pixel point with coordinate $n$ on the synthetic angiogram. 
+The Volume Render in \cref{fig:render} calculates the final radiation brightness of the X-Ray in the direction corresponding to each pixel point after passing through the blood vessel based on the above formula. 
+More examples of this formula are shown in \cref{fig:bgDemo}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/10.bgDemo.png}
+  \caption{The effect of adding blood vessels to the background image.}
+  \label{fig:bgDemo}
+\end{figure}
+%-------------------------------------------------------------------------
+
+\subsubsection{Contrast agent concentration disturbance}
+Perturbing the image corresponding to the X-Ray attenuation rate $L_v(\sigma_v)$ is the premise of consistency learning in 3.1.2 above. The main purpose of this part is to let the neural network learn the knowledge that ``contrast agent concentration does not affect the geometric structure of blood vessels''. In this paper, the contrast agent concentration of the synthetic blood vessels is expressed as the light absorption rate $\sigma_v$ of the blood vessel object. After adjusting the light absorption rate of the 3D blood vessel object from $\sigma_v$ to $\overline{\sigma}_v$, the radiation brightness attenuation rate $L_v(\overline{\sigma}_v)$ of X-Ray when passing through the blood vessel is:
+\begin{equation}
+L_v(\overline{\sigma}_v) = e^{-d_v * \overline{\sigma}_v} = e^{\ln(L_v(\sigma_v)) * \frac{\overline{\sigma}_v}{\sigma_v}}
+\end{equation}
+The synthesizer in \cref{fig:render} calculates the radiation brightness attenuation rate of the X-Ray in the corresponding direction of each pixel after passing through the blood vessels with contrast agent concentration disturbance based on the above formula. 
+The effect of contrast agent concentration perturbation is shown in \cref{fig:disturbance}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/11.disturbance.png}
+  \caption{The effect of adding blood vessels to the background image.}
+  \label{fig:disturbance}
+\end{figure}
+%-------------------------------------------------------------------------
+

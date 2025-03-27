@@ -7,3 +7,6 @@ ICCV 2025：
 图片：
     引用两张：
         \cref{fig:onecol,fig:short}
+引用表格：
+    \cref{tab:example}
+    

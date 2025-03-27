@@ -1,5 +1,212 @@
 \section{Experimental Results}
 
+%-------------------------------------------------------------------------
+
+\subsection{Datasets}
+
+Since the method in this paper is based on the perspective analysis of X-ray Coronary angiography (XCA), we used XCAD and DSA\_Tongji, both of which are medical images imaged using XCA, for testing. XCAD is a public dataset, and current vascular segmentation algorithms are tested on this dataset, while DSA\_Tongji is the data collected by our university. During the annotation process of the DSA\_Tongji dataset, we found that the segmentation and annotation cost of XCA vessels was high, so we designed this segmentation method that does not require manual annotation.
+
+As shown in \cref{tab:myT02}, the training set of XCAD contains 1621 real angiography images and 1621 real background images, 
+and the test set of XCAD contains 126 real angiography images and each angiography image has a corresponding manual annotation. 
+The training set of DSA\_Tongji contains 968 real angiography images and does not contain real background images, 
+and the test set contains 109 real angiography images and each angiography image has a corresponding manual annotation. 
+The method in this paper can remove the blood vessels in the real Angiography image and synthesize the Background image. 
+Therefore, our method can also be used to process datasets such as DSA\_Tongji that do not have real Background images. 
+In addition, the resolution of the images in these two datasets is 512*512, and they are all single-channel images.
+
+\begin{table}[h]
+    \centering
+    \caption{Comparison between XCAD and DSA\_Tongji datasets}
+    \label{tab:comparison}
+    \begin{tabular}{llcc}
+    \toprule
+    \textbf{} & \textbf{} & \textbf{XCAD} & \textbf{DSA\_Tongji} \\
+    \midrule
+    \multirow{}{}{Training Set} 
+    & Angiography & 1621 & 968 \\
+    & Background & 1621 & 0 \\
+    & Vessel labels & 126 & 109 \\
+    & Resolution & 512*512 & 512*512 \\
+    \midrule
+    \multirow{}{}{Test Set} 
+    & Angiography & 126 & 109 \\
+    & Vessel labels & 126 & 109 \\
+    & Resolution & 512*512 & 512*512 \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:myT02}
+\end{table}
+
+%-------------------------------------------------------------------------
+\subsection{Evaluation Metrics}
+In order to evaluate the effect of our algorithm on the XCAD and DSA\_Tongji data, the following seven indicators are used: Jaccard Index (JC), Dice Coefficient (Dice), accuracy (Acc), sensitivity (Sn), specificity (Sp), precision (Pr) and F1 score (F1). The higher the value of these seven indicators, the better the effect of the algorithm.
+%-------------------------------------------------------------------------
+\subsection{Comparison with other Methods on the XCAD}
+As shown in \cref{tab:myT03}, we compared our algorithm with other algorithms on the XCAD dataset using the five indicators JC, Dice, Acc, Sn and Sp, following FreeCOS [02.01.FreeCOS]. The red font in the table is used to highlight the optimal indicator values. It can be seen that the method proposed in this article achieved the optimal values in the four indicators of JC, Dice, Acc, and Sn among methods that do not require manual annotation. On the Sp indicator, our method only differs from the optimal value of this indicator by 0.9%.
+
+\begin{table*}[h]
+    \centering
+    \caption{Quantitative evaluation of Our Method compared with different methods on the XCAD dataset}
+    \label{tab:quantitative}
+    \begin{tabular}{llccccc}
+    \toprule
+    \textbf{Category} & \textbf{Methods} & \textbf{JC} & \textbf{Dice} & \textbf{Acc} & \textbf{Sn} & \textbf{Sp} \\
+    \midrule
+    
+    \multirow{}{}{Domain Adaptation} 
+    & U-Net(DA) & 0.228 & 0.365 & 0.831 & 0.444 & 0.906 \\
+    & MMD & 0.262 & 0.416 & 0.873 & 0.553 & 0.920 \\
+    & YNet & 0.287 & 0.434 & 0.891 & 0.523 & 0.935 \\
+    & C-DARL(DA) & 0.584 & 0.740 & 0.858 & ** & ** \\
+    
+    \midrule
+    
+    \multirow{}{}{Traditional} 
+    & Hessian & 0.307 & 0.465 & 0.948 & 0.406 & 0.981 \\
+    & OOF & 0.241 & 0.386 & 0.899 & 0.566 & 0.920 \\
+    
+    \midrule
+    
+    \multirow{}{}{Unsupervised} 
+    & IIC & 0.124 & 0.178 & 0.738 & 0.487 & 0.754 \\
+    & ReDO & 0.151 & 0.261 & 0.753 & 0.392 & 0.923 \\
+    
+    \midrule
+    
+    \multirow{}{}{Self-supervised} 
+    & SSVS & 0.389 & 0.557 & 0.945 & 0.583 & 0.972 \\
+    & DARL & 0.471 & 0.636 & 0.962 & 0.597 & \textbf{0.985} \\
+    & C-DARL & 0.466 & 0.633 & 0.712 & ** & ** \\
+    & FreeCOS & 0.499 & 0.661 & 0.960 & 0.687 & 0.977 \\
+    & Ours & \textbf{0.597} & \textbf{0.748} & \textbf{0.968} & \textbf{0.825} & 0.976 \\
+    
+    \bottomrule
+    \end{tabular}
+    \label{tab:myT03}
+\end{table*}
+
+We found that the manual annotation cost for coronary vessel segmentation is enormous during the annotation process of X-ray coronary angiography images. Therefore, we believe that a small decrease in accuracy is completely acceptable if the cost of manual annotation can be avoided. The domain adaptive method, although not requiring manual annotation on the target dataset, requires manual annotation on the source dataset. The manual annotation cost on some source datasets is even higher than on the target dataset, such as the XA Sim2Real [00.01. XA-Sim2Real] method, which requires annotation on 3D format source datasets like CT. 
+Therefore, we did not include supervised methods and some domain adaptation methods in \cref{tab:myT03}.
+
+\cref{fig:XCAD1} shows a visual comparison of our method and other methods on XCAD. From the figure, we can see that our method has fewer segmentation errors on XCAD. From the figure, we can also see that the segmentation results of other methods have fragments, while the segmentation results of our method have no fragments at all. 
+\cref{fig:XCAD2} shows a visual comparison of our method and more other methods on XCAD.
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{pic/12.XCAD1.png}
+    \caption{Visual analysis on XCAD}
+    \label{fig:XCAD1}
+\end{figure*}
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{pic/13.XCAD2.png}
+    \caption{Visual comparison with more methods on XCAD}
+    \label{fig:XCAD2}
+\end{figure*}
+
+%-------------------------------------------------------------------------
+\subsection{Comparison with other Methods on the DSA\_Tongji}
+
+As shown in \cref{tab:myT04}, we compared our algorithm with other algorithms on the DSA\_Tongji dataset using the four indicators of JC, F1, Pr and Acc, following YTL [YTL]. 
+The red font in the table is used to highlight the optimal indicator values. 
+It can be seen that our method performs better on the DSA\_Tongji dataset than our previous best method, FreeCOS, which does not require manual annotation. 
+In the DSA\_Tongji dataset, the performance of this method is even better than supervised methods such as YTL that rely on manual labeling.
+
+\begin{table*}[t]
+    \centering
+    \caption{Quantitative evaluation of Our Method compared with different methods on the DSA\_Tongji dataset}
+    \label{tab:tongji_results}
+    \begin{tabular}{llcccc}
+    \toprule
+    \textbf{Category} & \textbf{Methods} & \textbf{JC} & \textbf{F1} & \textbf{Pr} & \textbf{Acc} \\
+    \midrule
+    \multirow{}{}{Supervised} 
+    & UNet         & 0.2604 & 0.2134 & 0.560 & 0.830 \\
+    & ResUNet      & 0.3271 & 0.3825 & 0.645 & 0.912 \\
+    & RAUNet34     & 0.3550 & 0.4006 & 0.742 & 0.941 \\
+    & TransResUNet & 0.4506 & 0.6167 & 0.557 & 0.943 \\
+    & YTL          & 0.4091 & 0.5626 & 0.733 & \textbf{0.958} \\
+    \midrule
+    \multirow{}{}{Self-supervised}
+    & FreeCOS      & 0.4230 & 0.5950 & 0.646 & 0.935 \\
+    & Ours         & \textbf{0.5470} & \textbf{0.7070} & \textbf{0.763} & 0.954 \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:myT04}
+\end{table*}
+
+\cref{fig:DSA1} shows a visual comparison of our method and the baseline on DSA\_Tongji. 
+From the figure, we can see that the segmentation results of our method on DSA\_Tongji can obtain more information about small blood vessels. 
+From the figure, we can also see that the segmentation results of other methods have fragments, 
+while the segmentation results of our method have no fragments at all. 
+\cref{fig:DSA2} shows the segmentation results of more pictures on DSA\_Tongji.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{pic/14.DSA1.png}
+    \caption{Visualization analysis on DSA/_Tongji }
+    \label{fig:DSA1}
+\end{figure}
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{pic/15.DSA2.png}
+    \caption{More segmentation results on DSA\_Tongji}
+    \label{fig:DSA2}
+\end{figure*}
+
+%-------------------------------------------------------------------------
+\subsection{Comparison with Baseline}
+
+FreeCOS is the best method that does not require manual annotation before us, and it is also the baseline of our method. 
+Compared with FreeCOS, our algorithm has improved JC by 9.8%, DICE by 8.7%, Acc by 0.8%, and Sn by 13.8% on the XCAD dataset. 
+\cref{fig:baseline} is a detailed comparison between our method and the baseline. In this group of figures, the red line represents our method, the green line represents the baseline, the horizontal axis represents the epoch, and the vertical axis represents the score of the corresponding indicator. The meaning of a line is the changes in various indicators during the training process. In each figure, the red line (our method) is above the green line (baseline) as a whole, which means that our method is always better than the baseline during the entire training process. 
+The intersection of the two red horizontal and vertical dashed lines in each figure indicates the moment when our method has the highest value of the indicator during the entire training process. 
+Similarly, the intersection of the blue dashed lines indicates the moment when the baseline has the highest indicator value during the entire training process. 
+In each figure, the red intersection is above the green intersection, 
+which means that the optimal result of each indicator of our method is better than the baseline.
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{pic/16.baseline.png}
+    \caption{Comparison of our method with the baseline}
+    \label{fig:baseline}
+\end{figure*}
+%-------------------------------------------------------------------------
+\subsection{Ablation study}
+
+ablition \cref{fig:ablition}.
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{pic/17.ablition.png}
+    \caption{Ablation study}
+    \label{fig:ablition}
+\end{figure*}
+
+%-------------------------------------------------------------------------
+\subsection{Loss Function}
+
+As shown in \cref{fig:loss}, in the early stage of the training process, the total loss function is mainly affected by the segmentation loss $L_{\text{seg}}$. As the neural network continues to train and learn, the segmentation loss $L_{\text{seg}}$ decreases rapidly. Then, due to the difference between the target data domain and the source data domain, the neural network begins to overfit, so contrastive learning $L_{\text{cont}}$ and adversarial learning $L_{\text{adv}}$ have recovered to a certain extent. In the later stage of training and learning, the proportion of contrastive learning $L_{\text{cont}}$, adversarial learning $L_{\text{adv}}$, and perturbation consistency constraints $L_{\text{cons}}$ in the total loss function exceeds the segmentation loss $L_{\text{seg}}$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{pic/18.loss.png}
+    \caption{Loss Function}
+    \label{fig:loss}
+\end{figure}
+
+%-------------------------------------------------------------------------
+
+
+
+
 You must include your signed IEEE copyright release form when you submit your finished paper.
 We MUST have this form before your paper can be published in the proceedings.
 

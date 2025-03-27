@@ -1,0 +1,105 @@
+\subsection{Background image acquisition}
+
+Synthesis of high-quality angiography requires a background image without vascular information. This paper synthesizes the background image by destroying the frequency signal corresponding to the vascular pattern in the XCA angiography. 
+\cref{fig:bg} is a comparison of the angiography and the synthesized background image with the original image. 
+Since XCA uses perspective imaging technology, 
+it is more difficult to decouple the vascular object and the background. 
+To address this challenge, we propose the following solution.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/5.bg.png}
+  \caption{Comparison between the contrast image and the synthetic background image}
+  \label{fig:bg}
+\end{figure}
+
+%-------------------------------------------------------------------------
+
+\subsubsection{Decoupling of background and blood vessels}
+This paper uses a method based on Foley transform to decouple the background signal and the vascular signal in the angiogram $x_t$. 
+As shown in \cref{fig:decouple}, this paper uses the FFT algorithm to convert the two-dimensional spatial domain image $x_t$ into a complex spectrum $f$. The principle of the FFT algorithm is the Foley transform:
+\begin{equation}
+f(w) = \iint x_t(n) e^{2\pi i n^T w} dn_1 dn_2
+\end{equation}
+Where $i$ represents the imaginary part of the complex number, $w$ represents the two-dimensional frequency (the coordinate on the complex spectrum $f$), and $n$ represents the coordinate on the two-dimensional spatial domain image $x_t$. The symbol $n$ requires that the value range of the image coordinates be mapped to $[0,1]^2$:
+\begin{equation}
+n = \left( \frac{i}{\text{Height}}, \frac{j}{\text{Width}} \right)^T
+\end{equation}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/6.decouple.png}
+  \caption{Blood vessel corresponding frequency range}
+  \label{fig:decouple}
+\end{figure}
+
+The 2D frequency $\mathbf{w}$ describes the width of a pattern in both the horizontal and vertical directions. The middle part of the spectrum $\mathbf{f}$ corresponds to the low-frequency signal of the angiogram $x_t$, and the edge part corresponds to the high-frequency signal. 
+FDA[FDA] uses a rectangular box constraint to define the frequency range of the target object. 
+FDA needs to process photographic images, 
+which have up and down and left and right distinctions (this is usually determined by the position of the sky and the ground in the picture). 
+Unlike FDA, the angiography images faced in this article do not have up and down and left and right distinctions, 
+so it is obviously inappropriate to use a rectangular box constraint. 
+In view of the characteristics of angiography images, this paper proposes a double ellipse constraint to define the frequency range of vascular objects in the spectrum:
+
+\begin{equation}
+  M_w = 
+  \begin{cases} 
+  1, & \alpha \leq \sqrt{\left(\frac{w_1}{\text{Height}}\right)^2 + \left(\frac{w_2}{\text{Width}}\right)^2} \leq \beta \\
+  0, & \text{else}
+  \end{cases}
+\end{equation}
+  
+where, $\alpha$ represents the lower limit of the frequency corresponding to the vascular image, and $\beta$ represents the upper limit. In Appendix A, this paper proves through mathematical derivation that the above double ellipse constraint can retain more effective background signals than the rectangular box constraint.
+
+The synthesized background image obtained using the above method and the by-products during the synthesis process are shown in \cref{fig:decoupleDemo}.
+
+% 插入单栏插图
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pic/7.decoupleDemo.png}
+  \caption{Blood vessel corresponding frequency range}
+  \label{fig:decoupleDemo}
+\end{figure*}
+
+%-------------------------------------------------------------------------
+
+\subsubsection{Noise spectrum}
+In order to synthesize the background image based on the angiogram, we hope to replace the signal corresponding to the blood vessel pattern in the angiogram with a noise signal of the same frequency, thereby removing the target of the blood vessel in the angiogram. Therefore, we need a noise image whose signal is similar to the source angiogram but whose pattern is as unrelated as possible. The complex spectrum $f$ can be decomposed into the amplitude spectrum $f^A$ and the phase spectrum $f^P$ according to Euler's formula, and the decomposition method is:
+\begin{equation}
+f(w) = f^A(w) \cdot e^{i f^P(w)}
+\end{equation}
+\begin{equation}
+\begin{cases}
+f^A(w) = \|f(w)\| \\
+f^P(w) = \arctan \frac{\overline{f}(w) - f(w)}{\overline{f}(w) + f(w)}
+\end{cases}
+\end{equation}
+where, $\|f(w)\|$ represents the magnitude corresponding to the complex number $f(w)$, and $\overline{f}(w)$ represents the conjugate complex number corresponding to the complex number $f(w)$. Simply put, the phase represents the position structure of the target pattern, and the amplitude represents the light and dark contrast of the current pattern. If we set the phase position to zero and the amplitude remains unchanged, the target pattern structure will be completely destroyed, but the new pattern signal can be very close to the source imaging image, so this new pattern is very suitable for use as a noise pattern. The method of analyzing the noise image $x_{\text{noise}}$ by inverse Fourier transform is:
+\begin{equation}
+x_{\text{noise}} = \text{iFFT} \circ f^A(w)
+\end{equation}
+
+%-------------------------------------------------------------------------
+
+\subsubsection{Replacement of blood vessel signal}
+As shown in \cref{fig:getBG}, this paper replaces the signal corresponding to the vascular pattern in the angiography with a noise signal of the same frequency, thereby obtaining a complex spectrum $f_b$ of an artificial synthetic background without a vascular pattern:
+\begin{equation}
+f_b = (1 - M_w) * f + M_w * f^A \tag{12}
+\end{equation}
+Then, the complex spectrum $f_b$ of the artificial synthetic background can be converted into a 2D spatial domain image $x_b$ of the artificial synthetic background through the Inv-FFT algorithm. The principle of the Inv-FFT algorithm is the inverse Foley transform:
+\begin{equation}
+x_b = \text{iFFT} \circ f_b \tag{13}
+\end{equation}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pic/8.getBG.png}
+  \caption{Blood vessel corresponding frequency range}
+  \label{fig:getBG}
+\end{figure}
+
+%-------------------------------------------------------------------------
+
+
+
+
