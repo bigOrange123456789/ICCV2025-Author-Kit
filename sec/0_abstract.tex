@@ -1,7 +1,15 @@
 \begin{abstract}
-The ABSTRACT is to be in fully justified italicized text, at the top of the left-hand column, below the author and affiliation information.
-Use the word ``Abstract'' as the title, in 12-point Times, boldface type, centered relative to the column, initially capitalized.
-The abstract is to be in 10-point, single-spaced type.
-Leave two blank lines after the Abstract, then begin the main text.
-Look at previous \confName abstracts to get a feel for style and length.
+Percutaneous coronary intervention (PCI) requires accurate and real-time coronary vessel segmentation results to ensure the safety and efficiency of the operation. 
+However, supervised vascular segmentation learning methods require sufficient annotated datasets. 
+The annotation of coronary vessel datasets requires medical expertise and is very time-consuming and error-prone. 
+To address this problem, this paper proposes a self-supervised curve object segmentation method. 
+The method first uses Fourier transform to remove the vascular structure from the perspective image to obtain the background image; 
+then, based on the analysis of the perspective principle, artificial tree-like vessels are added to the background image; 
+finally, the knowledge learned from the synthetic data is transferred to the real dataset through contrast learning, adversarial learning and consistency regularization. Its main innovations include: 
+for the first time, the three-dimensional perspective principle is applied to the synthesis of coronary vascular objects in self-supervised learning; 
+a donut-shaped Foley leaf spectrum constraint is designed, and it is proved through mathematical derivation that the scheme can improve the clarity of the synthetic background image; 
+data perturbation is achieved by adjusting the contrast agent concentration, thus proposing a new consistency regularization loss function. 
+Experimental results on the public dataset XCAD show that our algorithm achieves SOTA results among all methods that do not require manual annotation (Jaccard=0.597, Dice=0.748, Acc=0.968, Sn=0.825). 
+The same conclusion is also obtained on the dataset DSA\_Tongji collected by our university. 
+The source code of this work can be found at https://github.com/***/***.
 \end{abstract}
