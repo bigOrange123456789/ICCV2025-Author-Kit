@@ -196,7 +196,13 @@ ablition \cref{fig:ablition}.
 %-------------------------------------------------------------------------
 \subsection{Loss Function}
 
-As shown in \cref{fig:loss}, in the early stage of the training process, the total loss function is mainly affected by the segmentation loss $L_{\text{seg}}$. As the neural network continues to train and learn, the segmentation loss $L_{\text{seg}}$ decreases rapidly. Then, due to the difference between the target data domain and the source data domain, the neural network begins to overfit, so contrastive learning $L_{\text{cont}}$ and adversarial learning $L_{\text{adv}}$ have recovered to a certain extent. In the later stage of training and learning, the proportion of contrastive learning $L_{\text{cont}}$, adversarial learning $L_{\text{adv}}$, and perturbation consistency constraints $L_{\text{cons}}$ in the total loss function exceeds the segmentation loss $L_{\text{seg}}$.
+As shown in \cref{fig:loss}, in the early stage of the training process, 
+the total loss function is mainly affected by the segmentation loss $L_{\text{seg}}$. 
+As the neural network continues to train and learn, the segmentation loss $L_{\text{seg}}$ decreases rapidly. 
+Then, due to the difference between the target data domain and the source data domain, the neural network begins to overfit, 
+so adversarial learning $L_{\text{adv}}$ have recovered to a certain extent. 
+In the later stage of training and learning, the proportion of adversarial learning $L_{\text{adv}}$, 
+and perturbation consistency constraints $L_{\text{cons}}$ in the total loss function exceeds the segmentation loss $L_{\text{seg}}$.
 
 \begin{figure}[htbp]
     \centering

@@ -57,21 +57,4 @@ L_{\text{adv}} = \mathbb{E}[-\log(D(y_t))]
 \end{figure}
 
 %-------------------------------------------------------------------------
-
-\subsubsection{Contrastive Learning}
-The contrastive learning loss measures the difference between the target image features and the source image features. The contrast is used to let the student neural network learn that ``the blood vessels in the real target image are also 3D tubular tree structures like the blood vessels in the synthetic source image", so as to transfer the knowledge learned from the synthetic image to the real image. The specific form of this contrastive learning loss is info-NCE:
-\begin{equation}
-  L_{\text{cont}}
-  %L_{\text{cont}} = \mathbb{E} \left[ -\log \frac{\exp(f_t^+ \cdot f_s^+ / \tau)}{\exp(f_t^+ \cdot f_s^+ / \tau) + \sum_{j \neq t} \exp(f_t^+ \cdot f_s^j / \tau) + \sum_{j \neq s} \exp(f_s^+ \cdot f_t^j / \tau)} \right]
-\end{equation}
-
-As shown in \cref{fig:Contrastive}, contrastive learning first distinguishes whether each pixel in the image represents a blood vessel or background based on the predicted mask $y_t$ of the real image and the predicted mask $y_s$ of the synthetic image. Then, contrastive learning loss is used to shorten the distance between the blood vessel features $f_t^+$ in the target image and the blood vessel features $f_s^+$ in the source image. At the same time, the distance between the blood vessel features $f_s^-$ in the source image and the background features $f_t^-$ in the target image is further away.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.4\textwidth]{pic/4.cont.png}
-  \caption{The framework of the proposed method}
-  \label{fig:Contrastive}
-\end{figure}
-
 %-------------------------------------------------------------------------
