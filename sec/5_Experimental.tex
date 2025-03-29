@@ -42,7 +42,7 @@ In addition, the resolution of the images in these two datasets is 512*512, and 
 In order to evaluate the effect of our algorithm on the XCAD and DSA\_Tongji data, the following seven indicators are used: Jaccard Index (JC), Dice Coefficient (Dice), accuracy (Acc), sensitivity (Sn), specificity (Sp), precision (Pr) and F1 score (F1). The higher the value of these seven indicators, the better the effect of the algorithm.
 %-------------------------------------------------------------------------
 \subsection{Comparison with other Methods on the XCAD}
-As shown in \cref{tab:myT03}, we compared our algorithm with other algorithms on the XCAD dataset using the five indicators JC, Dice, Acc, Sn and Sp, following FreeCOS [02.01.FreeCOS]. The red font in the table is used to highlight the optimal indicator values. It can be seen that the method proposed in this article achieved the optimal values in the four indicators of JC, Dice, Acc, and Sn among methods that do not require manual annotation. On the Sp indicator, our method only differs from the optimal value of this indicator by 0.9%.
+As shown in \cref{tab:myT03}, we compared our algorithm with other algorithms on the XCAD dataset using the five indicators JC, Dice, Acc, Sn and Sp, following FreeCOS\cite{02.01.FreeCOS}. The red font in the table is used to highlight the optimal indicator values. It can be seen that the method proposed in this article achieved the optimal values in the four indicators of JC, Dice, Acc, and Sn among methods that do not require manual annotation. On the Sp indicator, our method only differs from the optimal value of this indicator by 0.9%.
 
 \begin{table*}[h]
     \centering
@@ -85,7 +85,10 @@ As shown in \cref{tab:myT03}, we compared our algorithm with other algorithms on
     \label{tab:myT03}
 \end{table*}
 
-We found that the manual annotation cost for coronary vessel segmentation is enormous during the annotation process of X-ray coronary angiography images. Therefore, we believe that a small decrease in accuracy is completely acceptable if the cost of manual annotation can be avoided. The domain adaptive method, although not requiring manual annotation on the target dataset, requires manual annotation on the source dataset. The manual annotation cost on some source datasets is even higher than on the target dataset, such as the XA Sim2Real [00.01. XA-Sim2Real] method, which requires annotation on 3D format source datasets like CT. 
+We found that the manual annotation cost for coronary vessel segmentation is enormous during the annotation process of X-ray coronary angiography images. Therefore, we believe that a small decrease in accuracy is completely acceptable if the cost of manual annotation can be avoided. The domain adaptive method, although not requiring manual annotation on the target dataset, requires manual annotation on the source dataset. 
+The manual annotation cost on some source datasets is even higher than on the target dataset, 
+such as the XA Sim2Real \cite{00.01.XA-Sim2Real} method, 
+which requires annotation on 3D format source datasets like CT. 
 Therefore, we did not include supervised methods and some domain adaptation methods in \cref{tab:myT03}.
 
 \cref{fig:XCAD1} shows a visual comparison of our method and other methods on XCAD. From the figure, we can see that our method has fewer segmentation errors on XCAD. From the figure, we can also see that the segmentation results of other methods have fragments, while the segmentation results of our method have no fragments at all. 
@@ -110,7 +113,7 @@ Therefore, we did not include supervised methods and some domain adaptation meth
 %-------------------------------------------------------------------------
 \subsection{Comparison with other Methods on the DSA\_Tongji}
 
-As shown in \cref{tab:myT04}, we compared our algorithm with other algorithms on the DSA\_Tongji dataset using the four indicators of JC, F1, Pr and Acc, following YTL [YTL]. 
+As shown in \cref{tab:myT04}, we compared our algorithm with other algorithms on the DSA\_Tongji dataset using the four indicators of JC, F1, Pr and Acc, following YTL\cite{YTL}. 
 The red font in the table is used to highlight the optimal indicator values. 
 It can be seen that our method performs better on the DSA\_Tongji dataset than our previous best method, FreeCOS, which does not require manual annotation. 
 In the DSA\_Tongji dataset, the performance of this method is even better than supervised methods such as YTL that rely on manual labeling.
